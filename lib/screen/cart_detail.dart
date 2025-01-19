@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:provider/provider.dart';
 
 import '../provider/cart-provider.dart';
 import '../provider/favorite-provider.dart';
@@ -14,22 +15,32 @@ class CartDetail extends StatefulWidget {
 class _CartDetailState extends State<CartDetail> {
   @override
   Widget build(BuildContext context) {
-    final provider = FavoriteProvider.of(context);
-    final _provider = CartProvider.of(context);
+    final providerr =Provider.of<CartProvider>(context);
+    final provider =Provider.of<FavoriteProvider>(context);
+ //   final provider = FavoriteProvider.of(context);
+  //  final providerr = CartProvider.of(context);
     final finalList = provider.favorites;
     _buildProductQuantity(IconData icon, int index) {
       return GestureDetector(
         onTap: () {
           setState(() {
             icon == Icons.add
-                ? _provider.incrementQuantity(index)
-                : _provider.decrementQuantity(index);
+                ? providerr.incrementQuantity(index)
+                : providerr.decrementQuantity(index);
           });
         },
         child: Container(
-          decoration:
-              BoxDecoration(color: Colors.red.shade900, shape: BoxShape.circle),
-          child: Icon(icon),
+          width: 30,
+          height: 18,
+          decoration: BoxDecoration(
+            color: Colors.red.shade900,
+            shape: BoxShape.circle,
+          ),
+          child: Center(
+              child: Icon(
+            icon,
+            size: 20,
+          )),
         ),
       );
     }
@@ -81,23 +92,21 @@ class _CartDetailState extends State<CartDetail> {
                             ),
                           ],
                         ),
-                        child:
-                        ListTile(
+                        child: ListTile(
                             tileColor: Colors.white,
                             title: Text(finalList[index].name,
                                 style: TextStyle(
                                     fontWeight: FontWeight.bold, fontSize: 18)),
-
-                            subtitle:
-                            Padding(
+                            subtitle: Padding(
                               padding: const EdgeInsets.only(top: 13.0),
                               child: Text(
-                                finalList[index].detail,style: TextStyle(fontSize: 16),
+                                finalList[index].detail,
+                                style: TextStyle(fontSize: 16),
                                 overflow: TextOverflow.ellipsis,
                               ),
                             ),
                             leading: CircleAvatar(
-                              radius: 35,
+                              radius: 30,
                               backgroundImage:
                                   AssetImage(finalList[index].image),
                               backgroundColor: Colors.red.shade900,
@@ -109,7 +118,7 @@ class _CartDetailState extends State<CartDetail> {
                                   Text(
                                     finalList[index].quantity.toString(),
                                     style: TextStyle(
-                                        fontSize: 7,
+                                        fontSize: 12,
                                         fontWeight: FontWeight.bold),
                                   ),
                                   _buildProductQuantity(Icons.remove, index),
@@ -134,11 +143,9 @@ class _CartDetailState extends State<CartDetail> {
                     topLeft: Radius.circular(10),
                     topRight: Radius.circular(10))),
             child: Row(
-              children: [
-                Text('\$${_provider.getTotalPrice()}')
-              ],
+              children: [Text('\$${providerr.getTotalPrice()}')],
             ),
-          )
+          ),
         ],
       ),
     );
